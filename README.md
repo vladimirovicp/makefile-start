@@ -27,6 +27,40 @@ This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 ```
 
+## Компиляция руками
+
+Самый простой способ собрать программу:
+```bash
+g++ main.cpp hello.cpp factorial.cpp -o hello
+```
+
+```bash
+./hello
+Hello World!
+The factorial of 5 is 120
+```
+Каждый раз набирать такое неудобно, поэтому будем автоматизировать.
+
+## Самый простой Мейкфайл
+
+>цель: зависимости
+>[tab] команда
 
 
+### Makefile-1
+```bash
+all:
+	g++ main.cpp hello.cpp factorial.cpp -o hello
+```
 
+Запуск
+
+```bash
+make -f Makefile-1
+```
+
+### vscode настройка tab
+* Внизу справа (в строке состояния) найди надпись Spaces: 4 или Tab Size: 4.
+* Кликни на неё — откроется меню.
+* Выбери: "Indent Using Tabs
+* Нажми "Convert Indentation to Tabs", если хочешь сразу заменить пробелы на табы в текущем файле.
