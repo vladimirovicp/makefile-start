@@ -7,6 +7,12 @@
 * [Справочник Си](https://ru.cppreference.com/w/c.html)
 
 
+## Plugin vscode
+
+* C/C++
+* C/C++ Extension Pack
+* Makefile Tools
+
 ```bash
 apt-get install gcc-c++
 g++ --version
@@ -53,7 +59,6 @@ all:
 	g++ main.cpp hello.cpp factorial.cpp -o hello
 ```
 
-Запуск
 
 ```bash
 make -f Makefile-1
@@ -64,3 +69,57 @@ make -f Makefile-1
 * Кликни на неё — откроется меню.
 * Выбери: "Indent Using Tabs
 * Нажми "Convert Indentation to Tabs", если хочешь сразу заменить пробелы на табы в текущем файле.
+
+
+### Makefile-2
+```bash
+all: hello
+
+hello: main.o factorial.o hello.o
+	g++ main.o factorial.o hello.o -o hello
+
+main.o: main.cpp
+	g++ -c main.cpp
+
+factorial.o: factorial.cpp
+	g++ -c factorial.cpp
+
+hello.o: hello.cpp
+	g++ -c hello.cpp
+
+clean:
+	rm -rf *.o hello
+```
+
+```bash
+make -f Makefile-2 clean
+```
+
+
+### Makefile-3
+
+Переменные — очень удобная штука. Для их использования надо просто присвоить им значение до момента их использования. После этого можно подставлять их значение в нужное место вот таким способом: $(VAR)
+
+```bash
+# Это комментарий, который говорит, что переменная CC указывает компилятор, используемый для сборки
+CC=g++
+#Это еще один комментарий. Он поясняет, что в переменной CFLAGS лежат флаги, которые передаются компилятору
+CFLAGS=-c -Wall
+
+all: hello
+
+hello: main.o factorial.o hello.o
+	$(CC) main.o factorial.o hello.o -o hello
+
+main.o: main.cpp
+	$(CC) $(CFLAGS) main.cpp
+
+factorial.o: factorial.cpp
+	$(CC) $(CFLAGS) factorial.cpp
+
+hello.o: hello.cpp
+	$(CC) $(CFLAGS) hello.cpp
+
+clean:
+	rm -rf *.o hello
+```
