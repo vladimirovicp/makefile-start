@@ -204,3 +204,109 @@ main.o:     формат файла elf64-x86-64
 ```
 
 тут мы видем во что компилятор превратил C++ код.
+
+
+
+### Makefile-4
+
+```bash
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=
+SOURCES=main.cpp hello.cpp factorial.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=hello
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
+```
+
+Рассмотрим данную настройку, для начала запустим
+
+```bash
+make -f Makefile-4
+g++ -c -Wall main.cpp -o main.o
+g++ -c -Wall hello.cpp -o hello.o
+g++ -c -Wall factorial.cpp -o factorial.o
+g++  main.o hello.o factorial.o -o hello
+```
+
+как видем, происходит таже сборка, что и ранее
+* Преобразуются .cpp → .o (если не актуальны)
+* Затем .o → hello (исполняемый файл)
+
+
+### Переменные (объявления)
+```bash
+CC=g++
+```
+Компилятор: g++ (C++ компилятор GNU)
+
+```bash
+CFLAGS=-c -Wall
+```
+
+Флаги компиляции:
+	* -c — компилировать до .o, не связывать
+	* -Wall — включить предупреждения
+
+```bash
+LDFLAGS=
+```
+Флаги связывания (пока пустые)
+
+```bash
+SOURCES=main.cpp hello.cpp factorial.cpp
+```
+Список всех исходных .cpp файлов
+
+```bash
+OBJECTS=$(SOURCES:.cpp=.o)
+```
+Все .cpp → .o
+
+Например: main.cpp hello.cpp → main.o hello.o
+
+```EXECUTABLE=hello```
+
+Имя итогового исполняемого файла
+
+### Цели (targets)
+
+```bash
+all: $(SOURCES) $(EXECUTABLE)
+```
+
+### Сборка исполняемого файла:
+```bash
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+```
+
+* Срабатывает, если .o файлы изменились
+
+* Компилирует и связывает объектные файлы в hello
+
+* $@ означает "имя цели" → hello
+
+* $(OBJECTS) — это main.o hello.o factorial.o
+
+
+### Компиляция каждого .cpp в .o
+
+```bash
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+```
+
+Это универсальное правило шаблона:
+
+*	Когда нужно собрать .o из .cpp
+*	$< — "первая зависимость" (исходный .cpp)
+*	$@ — "имя цели" (объектный .o)
